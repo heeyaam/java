@@ -25,6 +25,7 @@ public class PrintExample {
 		System.out.printf(
 				"%6d | %10s | %10s\n", 1, "홍길동", "도적");
 
+		
 	}
 
 }
