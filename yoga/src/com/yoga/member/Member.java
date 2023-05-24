@@ -33,6 +33,9 @@ public class Member {
 	private int memberExdate;
 	private int memberExtatus;
 	private int memberNumber;
+	private Date memberExappDate;
+	private String memberMembership;
+	
 	
 	
 	
@@ -113,6 +116,18 @@ public class Member {
 	}
 	public void setMemberNumber(int memberNumber) {
 		this.memberNumber = memberNumber;
+	}
+	public Date getMemberExappDate() {
+		return memberExappDate;
+	}
+	public void setMemberExappDate(Date memberExappDate) {
+		this.memberExappDate = memberExappDate;
+	}
+	public String getMemberMembership() {
+		return memberMembership;
+	}
+	public void setMemberMembership(String memberMembership) {
+		this.memberMembership = memberMembership;
 	}
 	
 	

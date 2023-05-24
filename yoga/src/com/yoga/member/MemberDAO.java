@@ -18,40 +18,13 @@ public class MemberDAO extends DAO{
 		return memberDao;
 	}
 	
-	
-	
-	//회원가입시 id 중복 체크 위한것
-	public Member idCheck(String id) {
-		Member member =null;
-		try {
-			conn();
-			String sql = "select member_id from member where member_id = ? union select manager_id from manager where manager_id = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, id);
-			pstmt.setString(2, id);
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				member = new Member();
-				member.setMemberId(rs.getString("member_id"));
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			disconn();
-		}
-		return member;
-	}
-	
-	
+
 	//회원가입 정보 입력 부분
 	public int joinMember(Member member) {
 		int result = 0;
 		try {
 			conn();
-			String sql = "insert into member(member_grade, member_id, member_pw, member_name, member_tel, member_redate) values('N', ?,?,?,?,sysdate)";
+			String sql = "insert into member(member_grade, member_id, member_pw, member_name, member_tel, member_redate, member_membership) values('N', ?,?,?,?,sysdate,'N')";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getMemberId());
 			pstmt.setString(2, member.getMemberPw());
@@ -93,6 +66,9 @@ public class MemberDAO extends DAO{
 				member.setMemberExdate(rs.getInt("member_exdate"));
 				member.setMemberExtatus(rs.getInt("member_exstatus"));
 				member.setMemberNumber(rs.getInt("member_number"));
+				member.setMemberExappDate(rs.getDate("member_exappdate"));
+				member.setMemberMembership(rs.getString("member_membership"));
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,5 +77,26 @@ public class MemberDAO extends DAO{
 		}
 		return member;
 	}
+	
+	
+	//개인 정보 관리에서 비밀번호 수정 기능
+	public int updatePw(Member member) {
+		int result = 0;
+		try {
+			conn();
+			String sql = "update member set member_pw =? where member_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMemberPw());
+			pstmt.setString(2, member.getMemberId());
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return result;
+	}
+	
 	
 }

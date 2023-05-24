@@ -45,9 +45,10 @@ public class Application {
 		}
 	}
 	
-	//1. 로그인 시 필요 메뉴
+	//1. 로그인 눌렸을 때 회원/관리자로 로그인 구분 하는 부분
 	private void menuSelect() {
 		System.out.println("1.  회원 로그인  2. 관리자 로그인");
+		System.out.println("메뉴 입력>");
 		String menu2 = sc.nextLine();
 		
 		switch (menu2) {
@@ -64,4 +65,6 @@ public class Application {
 			break;
 		}
 	}
+	
+
 }
