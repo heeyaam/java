@@ -99,4 +99,67 @@ public class MemberDAO extends DAO{
 	}
 	
 	
+	//락커 관리 페이지의 락커 대여현황 파악 기능
+	
+	public Member psLockerCheck(String memberId) {
+		Member member = null;
+		try {
+			conn();
+			String sql = "select * from locker where member_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				member = new Member();
+				member.setMemberId(memberId);
+				member.setLockerPermission(rs.getString("locker_permission"));
+				member.setLockerRedate(rs.getDate("locker_redate"));
+				member.setLockerStdate(rs.getDate("locker_stdate"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return member;
+	}
+	
+	// 락커 신청 하기
+	public int lockApp(Member member) {
+		int result = 0;
+		try {
+			conn();
+			String sql = " insert into locker(locker_permission, member_id, locker_redate) VALUES('N', ?, sysdate) ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMemberId());
+			
+			result = pstmt.executeUpdate();
+			
+			} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return result;
+	}
+	
+	// 락커 반납 신청 하기
+	public int lockerReturn(Member member) {
+		int result = 0;
+		try {
+			conn();
+			String sql = "delete from locker where member_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMemberId());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return result;
+	}
 }

@@ -37,6 +37,34 @@ public class Member {
 	private String memberMembership;
 	
 	
+	//락커 관리
+	private String lockerPermission;
+	private Date lockerRedate;
+	private Date lockerStdate;
+	
+	
+	
+	public String getLockerPermission() {
+		return lockerPermission;
+	}
+	public void setLockerPermission(String lockerPermission) {
+		this.lockerPermission = lockerPermission;
+	}
+	public Date getLockerRedate() {
+		return lockerRedate;
+	}
+	public void setLockerRedate(Date lockerRedate) {
+		this.lockerRedate = lockerRedate;
+	}
+	public Date getLockerStdate() {
+		return lockerStdate;
+	}
+	public void setLockerStdate(Date lockerStdate) {
+		this.lockerStdate = lockerStdate;
+	}
+	
+	
+	
 	
 	
 	public String getMemberGrade() {

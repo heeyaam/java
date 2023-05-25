@@ -4,12 +4,16 @@ import java.util.Scanner;
 
 import com.yoga.exe.Application;
 
+import oracle.net.aso.f;
+
 
 public class MemberService {
 	public static Member memberInfo= null;
 	public static Application applicationInfo = null;
 	boolean memlo = true;
 	boolean psinforma = true;
+	boolean lock = true;
+	
 	Scanner sc = new Scanner(System.in);
 	
 	
@@ -151,10 +155,12 @@ public class MemberService {
 			String menu4 = sc.nextLine();
 			switch (menu4) {
 			case "1":
-				DeletePsPw();
+				//비밀번호 수정 메뉴
+				deletePsPw();
 				break;
 			case "2":
-				
+				//락커 관리 
+				psLocker();
 				break;
 			case "3":
 				
@@ -173,11 +179,12 @@ public class MemberService {
 	}
 	
 	
+
 	//개인정보관리 의 1. 회원이 본인 비밀번호 수정 메뉴 기능
-	private void DeletePsPw() {
+	private void deletePsPw() {
 		Member member = new Member();
 		member = MemberDAO.getinstance().memberlogin(memberInfo.getMemberId());
-		System.out.println("비밀번호 수정 페이지");
+		System.out.println("☆☆☆☆☆ 비밀번호 수정 페이지 ☆☆☆☆☆");
 		System.out.println("수정할 비밀번호를 입력해주세요");
 		System.out.println("입력 >");
 		member.setMemberPw(sc.nextLine());
@@ -188,11 +195,100 @@ public class MemberService {
 		}else {
 			System.out.println("※※※※※비밀번호 수정 실패※※※※※");
 		}
+	}
+	
+	
+	// 개인정보 관리의  2. 본인 락커 관리
+	
+	private void psLocker() {
+		
+		lock =true;
+		while(lock) {
+		System.out.println("☆☆☆☆☆ 락커 관리 페이지 ☆☆☆☆☆");
+		Member member = MemberDAO.getinstance().psLockerCheck(memberInfo.getMemberId());
+		
+		if(member != null && member.getLockerPermission().equals("Y")) {
+			System.out.println(" 락커를 대여 중입니다");
+			System.out.println("락커 대여 시작일 : " +member.getLockerStdate());
+		}else {
+			System.out.println(" 락커를 대여하고 있지 않습니다");
+		}
+		
+		System.out.println();
+		System.out.println("1. 락커대여신청   2. 락커반납신청   3. 뒤로가기");
+		String menu8 = sc.nextLine();
+		// 락커 대여 여부 보이기
+		
+		switch (menu8) {
+		case "1":
+			lockApp();
+			break;
+		case "2":
+			 lockerReturn();
+			break;
+		case "3":
+			lock = false;
+			break;
+		default:
+			System.out.println("잘못된 메뉴번호를 입력하셨습니다");
+			break;
+			}
+		}
+	}
+
+	
+	//회원이 락커 신청하는 메뉴
+	
+	private void lockApp() {
+		Member member = MemberDAO.getinstance().psLockerCheck(memberInfo.getMemberId());
+		if(member == null) {
+			int result = MemberDAO.getinstance().lockApp(memberInfo);
+			
+			if(result >0) {
+				System.out.println("♡♡♡♡♡ 락커신청이 완료되었습니다 ♡♡♡♡♡");
+				
+			}else {
+				System.out.println("※※※※※ 락커신청이 실패했습니다 ※※※※※");
+				
+			}
+		}else if(member != null && member.getLockerPermission().equals("N")) {
+			System.out.println("♡♡♡♡♡  이미 락커 신청 진행중인 회원입니다 ♡♡♡♡♡ ");
+			
+		}else if(member != null && member.getLockerPermission().equals("Y")){
+			System.out.println("♡♡♡♡♡ 이미 사용하고 있는 락커가 있습니다 ♡♡♡♡♡");
+			
+		}else {
+			System.out.println(" 락커 대여신청 실패 ");
+		}
+	}
+	
+	// 회원이 락커 반납하는 메뉴
+
+	private void lockerReturn() {
+		Member member = new Member();
+		member = MemberDAO.getinstance().psLockerCheck(memberInfo.getMemberId());
+		if(member != null && member.getLockerPermission().equals("Y")) {
+			int result = MemberDAO.getinstance().lockerReturn(memberInfo);
+			if(result >0) {
+			System.out.println("♡♡♡♡♡ 락커 반납이 완료되었습니다 ♡♡♡♡♡");
+			}else {
+				System.out.println("락커 반납신청 실패되었음");
+			}
+		}else if(member != null && member.getLockerPermission().equals("N")) {
+			int result =MemberDAO.getinstance().lockerReturn(memberInfo);
+			if(result >0) {
+			System.out.println("♡♡♡♡♡ 신청한 락커 대여 신청이 취소되었습니다 ♡♡♡♡♡");
+			}else {
+				System.out.println("락커 대여 신청이 취소되지 않았습니다");
+			}
+		}else if(member ==null) {
+			System.out.println("♡♡♡♡♡ 반납가능한 락커가 없습니다 ♡♡♡♡♡");
+		}else {
+			System.out.println(" 락커 반납신청 실패");
+		}
 		
 		
 	}
-	
-
 	
 	
 	}
