@@ -38,24 +38,28 @@ public class Member {
 	
 	
 	//락커 관리
-	private String lockerPermission;
-	private Date lockerRedate;
+
 	private Date lockerStdate;
 	
+	private Date locapplyRedate;
+	
+	private int lockerNumber;
 	
 	
-	public String getLockerPermission() {
-		return lockerPermission;
+	
+	public int getLockerNumber() {
+		return lockerNumber;
 	}
-	public void setLockerPermission(String lockerPermission) {
-		this.lockerPermission = lockerPermission;
+	public void setLockerNumber(int lockerNumber) {
+		this.lockerNumber = lockerNumber;
 	}
-	public Date getLockerRedate() {
-		return lockerRedate;
+	public Date getLocapplyRedate() {
+		return locapplyRedate;
 	}
-	public void setLockerRedate(Date lockerRedate) {
-		this.lockerRedate = lockerRedate;
+	public void setLocapplyRedate(Date locapplyRedate) {
+		this.locapplyRedate = locapplyRedate;
 	}
+
 	public Date getLockerStdate() {
 		return lockerStdate;
 	}

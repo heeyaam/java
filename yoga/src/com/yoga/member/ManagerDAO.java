@@ -106,24 +106,6 @@ public class ManagerDAO extends DAO{
 		return result;
 	}
 	
-//	//2. 회원 수정 관리에서  2. 회원 믈래스 수정
-//	public int classUpdate(Member member) {
-//		int result = 0;
-//		try {
-//			conn();
-//			String sql = "update member set member_class =? where member_id = ?";
-//			pstmt = conn.prepareStatement(sql);
-//			pstmt.setString(1, member.getMemberClass());
-//			pstmt.setString(2, member.getMemberId());
-//			
-//			result = pstmt.executeUpdate();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}finally {
-//			disconn();
-//		}
-//		return result;
-//	}
 	
 	//2. 회원 수정 관리에서 3. 수업 시작일 수정
 	
@@ -265,15 +247,15 @@ public class ManagerDAO extends DAO{
 	Member member = null;
 	try {
 		conn();
-		String sql = "select * from locker";
+		String sql = "select * from locker where member_id is not null";
+		
 		pstmt = conn.prepareStatement(sql);
 		rs = pstmt.executeQuery();
 		
 		while(rs.next()) {
 			member = new Member();
-			member.setLockerPermission(rs.getString("locker_permission"));
+			member.setLockerNumber(rs.getInt("locker_number"));
 			member.setMemberId(rs.getString("member_id"));
-			member.setLockerRedate(rs.getDate("locker_redate"));
 			member.setLockerStdate(rs.getDate("locker_stdate"));
 			list.add(member);
 		}
@@ -284,40 +266,178 @@ public class ManagerDAO extends DAO{
 	}
 	return list;
 	}
+
 	
-	
-	public int lockeradmin(Member member) {
-		int result = 0;
+	// 락커 대여 신청자 전체 조회
+	public List<Member> lockerAppList() {
+		List<Member> list = new ArrayList<Member>();
+		Member member = null;
 		try {
 			conn();
-			String sql = "update locker set locker_permission = 'Y', locker.locker_stdate = sysdate where member_id = ?";
+			String sql = "select * from locapply";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				member = new Member();
+				member.setMemberId(rs.getString("member_id"));
+				member.setLocapplyRedate(rs.getDate("locapply_redate"));
+				list.add(member);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
 			disconn();
 		}
-		
-		return result;
+		return list;
 	}
 	
 	
-//	public int pwUpdate(Member member) {
-//		int result = 0;
-//		try {
-//			conn();
-//			String sql = "update member set member_pw =? where member_id = ?";
-//			pstmt = conn.prepareStatement(sql);
-//			pstmt.setString(1, member.getMemberPw());
-//			pstmt.setString(2, member.getMemberId());
-//			
-//			result = pstmt.executeUpdate();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}finally {
-//			disconn();
-//		}
-//		return result;
-//	}
+	
+	//락커 사용 허가 관리
+	public int lockeradmin(Member member) {
+		int result = 0;
+		try {
+			conn();
+			String sql = "update locker set member_id = ? ,locker_stdate = sysdate where locker_number =?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMemberId());
+			pstmt.setInt(2, member.getLockerNumber());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return result;
+	}
+	
+	public int deleteLocapp(String memberId) {
+		int result = 0;
+		try {
+			conn();
+			String sql = "delete from locapply where member_id =?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return result;
+	}
+	
+	//연장관리에 연장 신청가능한 회원 조회
+	public List<Member> exDateMemSelect() {
+		List<Member> list = new ArrayList<Member>();
+		Member member = null;
+		try {
+			conn();
+			String sql = "select member_id, member_name, member_stdate, member_endate, member_class,member_exdate from member where member_exdate > 0";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				member = new Member();
+				member.setMemberId(rs.getString("member_id"));
+				member.setMemberName(rs.getString("member_name"));
+				member.setMemberStdate(rs.getDate("member_stdate"));
+				member.setMemberEndate(rs.getDate("member_endate"));
+				member.setMemberClass(rs.getString("member_class"));
+				member.setMemberExdate(rs.getInt("member_exdate"));
+				list.add(member);
+				
+		
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return list;
+	}
+	
+	//락커 번호에 사용인원있는지 확인하기
+	public Member checLocNum(int lockerNumber) {
+		Member member = null;
+		try {
+			conn();
+			String sql = "select member_id from locker where locker_number = ? AND member_id IS NOT NULL";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, lockerNumber);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				member = new Member();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return member;//반환되는 member가 null이면 안쓰고있음. member가 null아니면 누가 쓰고있음
+	}
+	
 
+	
+	//연장관리의 만료일 연장한 회원 조회 
+	public List<Member> exStatuseSelect() {
+		List<Member> list = new ArrayList<Member>();
+		Member member = null;
+		try {
+			conn();
+			String sql = "select member_id, member_name, member_stdate, member_endate, member_class,member_exstatus,member_exappdate from member where member_exstatus > 0";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				member = new Member();
+				member.setMemberId(rs.getString("member_id"));
+				member.setMemberName(rs.getString("member_name"));
+				member.setMemberStdate(rs.getDate("member_stdate"));
+				member.setMemberEndate(rs.getDate("member_endate"));
+				member.setMemberClass(rs.getString("member_class"));
+				member.setMemberExtatus(rs.getInt("member_exstatus"));
+				member.setMemberExappDate(rs.getDate("member_exappdate"));
+				list.add(member);
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return list;
+	}
+	
+	
+	//회원 삭제 하기
+	
+	public int deleteMember(String memberId) {
+		int result = 0; 
+		try {
+			conn();
+			String sql = "delete from member where member_id =?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return result;
+	}
+	
 	
 }

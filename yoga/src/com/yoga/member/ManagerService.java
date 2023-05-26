@@ -2,6 +2,7 @@ package com.yoga.member;
 
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,6 +16,7 @@ public class ManagerService {
 	boolean manalog = true;
 	boolean mSlect = true;
 	boolean upmem = true;
+	
 	
 	Scanner sc = new Scanner(System.in);
 	
@@ -65,10 +67,10 @@ public class ManagerService {
 				LockerMana();
 				break;
 			case "5":
-				
+				ExtensionManage();
 				break;
 			case "6":
-				
+				deleteMember();
 				break;
 			case "7":
 				manalog =false;
@@ -80,6 +82,8 @@ public class ManagerService {
 		}
 		
 	}
+
+
 
 
 
@@ -227,34 +231,6 @@ public class ManagerService {
 	}
 	}
 	
-	//3. 회원 수정 관리에서 회원 믈래스 수정
-	
-//	private void classUpdate() {
-//	Member member = new Member();
-//	System.out.println("☆☆☆☆☆☆회원 클래스 수정☆☆☆☆☆☆");
-//
-//	
-//	while(true) {
-//	System.out.println("회원 아이디 입력>");
-//	member.setMemberId(sc.nextLine());
-//	Member memch =  MemberDAO.getinstance().memberlogin(member.getMemberId());
-//	if(memch != null) {
-//	System.out.println("바꿀 회원 클래스 입력>       ※※ 회원 클래스는   [  개인, 2회, 3회  ] 3개중 하나로 입력 ※※ ");
-//	member.setMemberClass(sc.nextLine());
-//	
-//	int result = ManagerDAO.getInstance().classUpdate(member);
-//	if(result >0) {
-//		System.out.println("☆☆☆☆회원 클래스 수정 완료☆☆☆☆");
-//		break;
-//	}else {
-//		System.out.println("회원 클래스 수정 실패...?");
-//		break;
-//	}
-//	}else {
-//		System.out.println("없는 아이디입니다");
-//	}
-//	}
-//	}
 	
 	// 회원 수정 관리에서 회원 수업 시작일 수정
 	
@@ -509,19 +485,24 @@ public class ManagerService {
 		System.out.println(" ☆☆☆☆☆☆ 락커 관리 ☆☆☆☆☆☆ ");
 		boolean locma = true;
 		while(locma) {
-		System.out.println("1. 락커대여현황   2. 락커대여 신청 허가관리   3. 뒤로가기");
+		System.out.println("1. 락커대여현황   2. 락커 신청자 현황   3.락커대여 신청 허가관리   4. 락커 철회   5. 뒤로가기");
 		String menu10 = sc.nextLine();
 		switch (menu10) {
 		case "1":
 			lockerPermissionList();
 			break;
 		case "2":
-			
+			lockerAppList();
 			break;
 		case "3":
+			lockeradmin();
+			break;
+		case "4":
+			
+			break;
+		case "5":
 			locma =false;
 			break;
-
 		default:
 			break;
 		}
@@ -530,23 +511,173 @@ public class ManagerService {
 	}
 
 
+//  대여 중인 인원 및 신청 현황
+
 	private void lockerPermissionList() {
 		List<Member> list = ManagerDAO.getInstance().lockerPermissionList();
 		System.out.println("☆☆☆☆☆☆ 락커 신청 및 대여중 현황 ☆☆☆☆☆☆");
 		
 		for(int i=0; i<list.size(); i++) {
-			System.out.println("락커사용허가 여부 : " +list.get(i).getLockerPermission());
+			System.out.println("락커 번호 : " + list.get(i).getLockerNumber());
 			System.out.println("사용자 아이디 : " + list.get(i).getMemberId());
-			System.out.println("락커 대여 신청일 : " +list.get(i).getLockerRedate());
 			System.out.println("락커 사용 시작일 : " +list.get(i).getLockerStdate());
 			System.out.println("-------------------------------------?\n");
 		}
 				
 	}
 	
+
+	// 락커 대여 신청자 확인
+	private void lockerAppList() {
+		List<Member> list = ManagerDAO.getInstance().lockerAppList();
+		System.out.println(" ☆☆☆☆☆☆ 락커 대여 신청자 현황 ☆☆☆☆☆☆");
+		
+		for(int i=0; i<list.size(); i++) {
+			System.out.println("회원 아이디 : " +list.get(i).getMemberId());
+			System.out.println("대여 신청일 : " +list.get(i).getLocapplyRedate());
+			System.out.println("--------------------------------------------\n");
+		}
+		
+	}
 	
 	
+	//락커 사용 허가 관리
+	private void lockeradmin() {
+		Member member = new Member();
+		System.out.println("락커 사용 허가 관리");
+		boolean locad = true;
+		boolean locad2 = true;
+		while(locad) {
+			System.out.println("락커 사용 허가할 회원 아이디 입력");
+			member.setMemberId(sc.nextLine());
+			
+			Member mem1 = MemberDAO.getinstance().lockerMember(member.getMemberId());
+			Member mem2 = MemberDAO.getinstance().psLockerCheck(member.getMemberId());
+			
+			if(mem2 != null) {
+				while(locad2) {
+					System.out.println("해당 회원에게 부여할 락커 번호 입력");
+					String text = String.valueOf(sc.nextLine());
+					if(text !=null && text.matches("(\\b[1-9]|[1-4]|[0-9]|50\\b)")) {
+						int text2 = Integer.parseInt(text);
+						Member mem4 = ManagerDAO.getInstance().checLocNum(text2);
+						if(mem4 ==null) {
+							member.setLockerNumber(text2);
+							
+							int result1 = ManagerDAO.getInstance().lockeradmin(member);
+							int result2 = ManagerDAO.getInstance().deleteLocapp(member.getMemberId());
+
+							if(result1 >0 && result2 >0 ) {
+								System.out.println("아이디 -> "+member.getMemberId() +"회원에게" + member.getLockerNumber()+"번 락커를 부여하였습니다");
+								locad = false;
+								locad2 = false;
+							}else {
+								System.out.println("락커 부여 실패");
+								locad = false;
+								locad2 =false;
+							}
+						}else {
+							System.out.println(" 사용중인 락커 입니다");
+						}
+					
+				}else {
+					System.out.println(" 없는 락커 번호입니다 다시 입력해주세요");
+				}
+				
+				}
+			}else {
+				System.out.println("락커 허가할 회원이 아닙니다");
+			}
+			
+		}
+	}
 	
+	
+
+
+	
+	
+	//연장 관리
+	private void ExtensionManage() {
+		boolean exmana = true;
+		while(exmana) {
+			System.out.println("☆☆☆☆☆☆ 회원 연장관리 ☆☆☆☆☆☆");
+			System.out.println("1. 만료일 연장가능한 회원 조회   2. 만료일 연장한 회원 조회   3. 뒤로가기");
+			String menu12 =sc.nextLine();
+			
+			switch (menu12) {
+			case "1":
+				// 만료일 연장가능한 회원 조회
+				exDateMemSelect();
+				break;
+			case "2":
+				// 만료일 연장한 회원 조회
+				exStatuseSelect();
+				break;
+			case "3":
+				//뒤로가기 페이지
+				exmana = false;
+				break;
+			default:
+				System.out.println("없는 메뉴입니다");
+				break;
+			}
+			
+		}
+	}
+
+	// 수업 만료일 연장가능한 회원 조회 메뉴
+	private void exDateMemSelect() {
+		List<Member> list = ManagerDAO.getInstance().exDateMemSelect();
+		System.out.println("==========================================");
+		for(int i =0; i<list.size(); i++) {
+			System.out.println("회원 아이디 : " + list.get(i).getMemberId());
+			System.out.println("회원 이름 : " + list.get(i).getMemberName());
+			System.out.println("수업시작일 : " +list.get(i).getMemberStdate());
+			System.out.println("수업종료일 : " +list.get(i).getMemberEndate());
+			System.out.println("클래스 : 주" + list.get(i).getMemberClass());
+			System.out.println("연장가능기간(월) : " + list.get(i).getMemberExdate()+ "달 \n");
+			
+		}
+		System.out.println("==========================================");
+	}
+
+
+	//수업 만료일 연장한 회원 조회 메뉴
+	private void exStatuseSelect() {
+		List<Member> list = ManagerDAO.getInstance().exStatuseSelect();
+		System.out.println("=============================================");
+		for(int i =0; i<list.size(); i++) {
+			System.out.println("회원 아이디 : " + list.get(i).getMemberId());
+			System.out.println("회원 이름 : " + list.get(i).getMemberName());
+			System.out.println("수업시작일 : " +list.get(i).getMemberStdate());
+			System.out.println("수업종료일 : " +list.get(i).getMemberEndate());
+			System.out.println("클래스 : 주" + list.get(i).getMemberClass());
+			System.out.println("연장한기간(월) : " + list.get(i).getMemberExtatus());
+			System.out.println("연장신청한 날짜 " + list.get(i).getMemberExappDate());
+		}
+		System.out.println("==========================================");
+	}
+	
+	
+	//회원 삭제
+	private void deleteMember() {
+		System.out.println("==========회원 삭제==========");
+		System.out.println("삭제할 회원 아이디 입력 > ");
+		String memberId = sc.nextLine();
+		Member member =  MemberDAO.getinstance().memberlogin(memberId);
+		if(member !=null) {
+		int result = ManagerDAO.getInstance().deleteMember(memberId);
+		if(result >0) {
+			System.out.println(memberId + "님 회원 삭제 완료");
+		}else {
+			System.out.println( memberId +" 님 삭제 실패");
+		}
+		}else {
+			System.out.println("없는 회원 입니다");
+		}
+		
+	}
 
 
 }

@@ -94,7 +94,7 @@ public class MemberService {
 	private void memberMenu() {
 		memlo = true;
 		while(memlo) {
-			System.out.println("1. 개인정보조회   2. 개인정보관리   3. 로그아웃");
+			System.out.println("1. 개인정보조회   2. 개인정보관리   3. 로그아웃 \n");
 			System.out.println("메뉴 입력>");
 			String menu3 = sc.nextLine();
 			
@@ -120,7 +120,7 @@ public class MemberService {
 	//개인정보 조회 메뉴 기능
 	private void personalInformation() {
 		System.out.println();
-		System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆개인 정보 조회☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆");
+		System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆개인 정보 조회☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆\n");
 		Member member = MemberDAO.getinstance().memberlogin(memberInfo.getMemberId());
 		
 		System.out.println("아이디 : " + member.getMemberId());
@@ -150,7 +150,7 @@ public class MemberService {
 		psinforma =true;
 		
 		while(psinforma) {
-			System.out.println("1. 비밀번호 수정  2. 락커 관리  3. 연장관리  4. 뒤로가기");
+			System.out.println("1. 비밀번호 수정  2. 락커 관리  3. 수업기간연장관리  4. 뒤로가기 \n");
 			System.out.println("메뉴 입력>");
 			String menu4 = sc.nextLine();
 			switch (menu4) {
@@ -163,13 +163,12 @@ public class MemberService {
 				psLocker();
 				break;
 			case "3":
-				
+				extension();
 				break;
 			case "4":
 				//뒤로가기 기능 
 				psinforma = false;
 				break;
-
 			default:
 				System.out.println("잘못된 메뉴번호를 입력하셨습니다");
 				break;
@@ -179,6 +178,7 @@ public class MemberService {
 	}
 	
 	
+
 
 	//개인정보관리 의 1. 회원이 본인 비밀번호 수정 메뉴 기능
 	private void deletePsPw() {
@@ -205,13 +205,15 @@ public class MemberService {
 		lock =true;
 		while(lock) {
 		System.out.println("☆☆☆☆☆ 락커 관리 페이지 ☆☆☆☆☆");
-		Member member = MemberDAO.getinstance().psLockerCheck(memberInfo.getMemberId());
+
+		Member member1 = MemberDAO.getinstance().lockerMember(memberInfo.getMemberId());
+		Member member2 = MemberDAO.getinstance().psLockerCheck(memberInfo.getMemberId());
 		
-		if(member != null && member.getLockerPermission().equals("Y")) {
-			System.out.println(" 락커를 대여 중입니다");
-			System.out.println("락커 대여 시작일 : " +member.getLockerStdate());
+
+		if(member1 != null) {
+			System.out.println(member2.getLockerNumber()+"번 락커를 대여중입니다");
 		}else {
-			System.out.println(" 락커를 대여하고 있지 않습니다");
+			System.out.println("대여중인 락커가 없습니다");
 		}
 		
 		System.out.println();
@@ -224,7 +226,7 @@ public class MemberService {
 			lockApp();
 			break;
 		case "2":
-			 lockerReturn();
+			lockLeturn();
 			break;
 		case "3":
 			lock = false;
@@ -237,59 +239,92 @@ public class MemberService {
 	}
 
 	
+
 	//회원이 락커 신청하는 메뉴
 	
 	private void lockApp() {
-		Member member = MemberDAO.getinstance().psLockerCheck(memberInfo.getMemberId());
-		if(member == null) {
+		Member member1 = MemberDAO.getinstance().lockerMember(memberInfo.getMemberId());
+		Member member2 = MemberDAO.getinstance().psLockerCheck(memberInfo.getMemberId());
+		if(member1 ==null && member2 == null) {
 			int result = MemberDAO.getinstance().lockApp(memberInfo);
 			
-			if(result >0) {
-				System.out.println("♡♡♡♡♡ 락커신청이 완료되었습니다 ♡♡♡♡♡");
-				
+			if(result >0 ) {
+				System.out.println("락커신청이 완료 되었습니다");
 			}else {
-				System.out.println("※※※※※ 락커신청이 실패했습니다 ※※※※※");
-				
+				System.out.println("락커신청 실패 되었습니다");
 			}
-		}else if(member != null && member.getLockerPermission().equals("N")) {
-			System.out.println("♡♡♡♡♡  이미 락커 신청 진행중인 회원입니다 ♡♡♡♡♡ ");
-			
-		}else if(member != null && member.getLockerPermission().equals("Y")){
-			System.out.println("♡♡♡♡♡ 이미 사용하고 있는 락커가 있습니다 ♡♡♡♡♡");
-			
-		}else {
-			System.out.println(" 락커 대여신청 실패 ");
+		}else if(member1 !=null) {
+			System.out.println("이미 대여중인 락커가 존재 합니다");
+		}else if(member2 !=null) {
+			System.out.println(" 진행중인 락커 대여신청이 있습니다");
 		}
+		
+		
 	}
 	
-	// 회원이 락커 반납하는 메뉴
+	
+	//락커 반납하는 기능
+	private void lockLeturn() {
+		
+		
+	}
 
-	private void lockerReturn() {
+	
+	
+	//2.회원 정보 관리의 3. 기간 연장관리
+
+	private void extension() {
+		
 		Member member = new Member();
-		member = MemberDAO.getinstance().psLockerCheck(memberInfo.getMemberId());
-		if(member != null && member.getLockerPermission().equals("Y")) {
-			int result = MemberDAO.getinstance().lockerReturn(memberInfo);
-			if(result >0) {
-			System.out.println("♡♡♡♡♡ 락커 반납이 완료되었습니다 ♡♡♡♡♡");
-			}else {
-				System.out.println("락커 반납신청 실패되었음");
-			}
-		}else if(member != null && member.getLockerPermission().equals("N")) {
-			int result =MemberDAO.getinstance().lockerReturn(memberInfo);
-			if(result >0) {
-			System.out.println("♡♡♡♡♡ 신청한 락커 대여 신청이 취소되었습니다 ♡♡♡♡♡");
-			}else {
-				System.out.println("락커 대여 신청이 취소되지 않았습니다");
-			}
-		}else if(member ==null) {
-			System.out.println("♡♡♡♡♡ 반납가능한 락커가 없습니다 ♡♡♡♡♡");
+		member = MemberDAO.getinstance().memberlogin(memberInfo.getMemberId());
+		
+		if(member.getMemberExdate()>0) {
+			System.out.println("수업기간을 "+member.getMemberExdate() +"달 연장가능한 회원입니다 \n");
 		}else {
-			System.out.println(" 락커 반납신청 실패");
+			System.out.println("연장 불가능한 회원입니다 \n");
 		}
 		
+
+		boolean exen = true;
+		while(exen) {
+			System.out.println("1. 연장신청   2. 뒤로가기");
+			String menu11 = sc.nextLine();
+		switch (menu11) {
+		case "1":
+			extensionEndate();
+			break;
+		case "2":
+			exen = false;
+			break;
+		default:
+			System.out.println("잘못된 메뉴번호를 입력하셨습니다");
+			break;
+			}
+		}
 		
 	}
+
+	private void extensionEndate() {
+		Member member = new Member();
+		member = MemberDAO.getinstance().memberlogin(memberInfo.getMemberId());
+		
+		if(member.getMemberExdate()>0) {
+		
+		int result = MemberDAO.getinstance().extensionEndate(member);
+		if(result >0) {
+			System.out.println("수업 만료일"+ member.getMemberExdate() +"달 연장이 되었습니다 \n");
+			memberInfo = MemberDAO.getinstance().memberlogin(member.getMemberId());
+		}else {
+			System.out.println(" 수업 만료일 연장 실패 \n");
+			}
+		}else {
+			System.out.println("연장할 수 있는 회원이 아닙니다");
+		}
+	}
 	
+
+	
+
 	
 	}
 	
