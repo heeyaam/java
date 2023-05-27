@@ -24,17 +24,22 @@ public class Application {
 
 		
 		while(run) {
+			System.out.println();
 			System.out.println("1. 로그인    2. 회원가입    3. 프로그램 종료");
+			System.out.println("메뉴입력 > ");
 			String menu = sc.nextLine();
 			
 			switch (menu) {
 			case "1":
+				System.out.println();
 				menuSelect();
 				break;
 			case "2":
+				System.out.println();
 				memser.joinMember();
 				break;
 			case "3":
+				System.out.println();
 				System.out.println("프로그램이 종료되었습니다");
 				run = false;
 				break;
@@ -54,14 +59,17 @@ public class Application {
 		switch (menu2) {
 		case "1":
 			//회원으로 로그인시 메뉴
+			System.out.println();
 			memser.memberlogin();
 			break;
 		case "2":
 			//관리자로 로그인시 메뉴
+			System.out.println();
 			manaser.managerLogin();
 			break;
 		default:
 			System.out.println("잘못된 메뉴번호를 입력하셨습니다");
+			System.out.println();
 			break;
 		}
 	}

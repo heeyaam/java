@@ -134,7 +134,7 @@ public class MemberDAO extends DAO{
 			if(rs.next()) {
 				member = new Member();
 				member.setMemberId(memberId);
-				member.setLockerNumber(rs.getInt("loker_number"));
+				member.setLockerNumber(rs.getInt("locker_number"));
 				member.setLockerStdate(rs.getDate("locker_stdate"));
 				
 			}
@@ -148,29 +148,6 @@ public class MemberDAO extends DAO{
 	}
 	
 	
-//	public Member psLockerCheck(String memberId) {
-//		Member member = null;
-//		try {
-//			conn();
-//			String sql = "select * from locker where member_id = ?";
-//			pstmt = conn.prepareStatement(sql);
-//			pstmt.setString(1, memberId);
-//			
-//			rs = pstmt.executeQuery();
-//			if(rs.next()) {
-//				member = new Member();
-//				member.setMemberId(memberId);
-//				member.setLockerPermission(rs.getString("locker_permission"));
-//				member.setLockerRedate(rs.getDate("locker_redate"));
-//				member.setLockerStdate(rs.getDate("locker_stdate"));
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}finally {
-//			disconn();
-//		}
-//		return member;
-//	}
 	
 	// 락커 신청 하기
 	public int lockApp(Member member) {
@@ -191,14 +168,42 @@ public class MemberDAO extends DAO{
 		return result;
 	}
 	
-	//락커 반납 신청 하기
-	public int lockLeturn() {
+	//락커 반납 신청 하기(락커를 대여중인상태일때 locker table 에서 수정)(주말)
+	public int lockLeturn(String memberId) {
 		int result=0;
-		
+		try {
+			conn();
+			String sql = "update locker set member_id = '',locker_stdate = '' where member_id= ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,memberId);
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
 		return result;
 	}
 
-	//반납 신청 하기
+	//반납 신청 하기(락커를 대여신청만하고 허가를 못받은 상황일때 locapply table 에서 삭제 )(주말)
+	public int deleteLocApply(String memberId){
+		int result = 0;
+		try {
+			conn();
+			String sql = "delete from locapply where member_id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return result;
+	}
 
 	
 	//2.회원 정보관리의 3. 기간 연장 관리
