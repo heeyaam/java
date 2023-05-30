@@ -19,7 +19,7 @@ public class MemberService {
 	/////////////////회원가입 메뉴 -> 회원으로만 가입 가능
 	public void joinMember() {
 		Member mem = new Member();
-		System.out.println("\n ☆☆☆☆☆ 회원가입 페이지입니다 ☆☆☆☆☆\n");
+		System.out.println("\n ☆☆☆☆☆ 회원가입 신청 페이지입니다 ☆☆☆☆☆\n");
 		String id = "";
 		while(true) {
 			System.out.println("아이디 입력>");

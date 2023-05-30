@@ -32,7 +32,7 @@ public class ManagerService {
 		
 		if(manager != null) {
 			if(manager.getManagerPw().equals(pw)) {
-				System.out.println(" \n ♡♡♡♡♡♡♡♡ 로그인 성공 ♡♡♡♡♡♡♡♡");
+				System.out.println(" \n ♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡ 로그인 성공 ♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡");
 				System.out.println(manager.getManagerName() + "님 환영합니다~♡ \n");
 				managerMenu();
 			}else {
@@ -98,9 +98,9 @@ public class ManagerService {
 			switch (menu5) {
 			case "1":
 				//전체회원조회
-				System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆전체회원 조회☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ \n");
+				System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ 전체회원조회 ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ \n");
 				getMemberList();
-				System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆\n");
+				System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆\n");
 				break;
 			case "2":
 				//회원 ID로 회원 단건 조회
@@ -123,17 +123,18 @@ public class ManagerService {
 		List<Member> list = ManagerDAO.getInstance().getMemberList();
 
 		for(int i=0; i<list.size(); i++) {
-			System.out.print("회원가입 허가 여부 : " + list.get(i).getMemberMembership());
-			System.out.print("  |아이디 : " + list.get(i).getMemberId());
-			System.out.print("  |비밀번호 : " + list.get(i).getMemberPw());
-			System.out.print("  |이름 : " + list.get(i).getMemberName());
-			System.out.print("  |전화번호 : " + list.get(i).getMemberTel());
-			System.out.print("  |등록일자 : " + list.get(i).getMemberRedate());
-			System.out.print("  |클래스 정보 : " + list.get(i).getMemberClass());
-			System.out.print("  |수업시작일 : " + list.get(i).getMemberStdate());
-			System.out.print("  |수업종료일 : " + list.get(i).getMemberEndate());
-			System.out.print("  |개인레슨 선생님 : " + list.get(i).getMemberTeacher());
+			System.out.println("회원가입 허가 여부 : " + list.get(i).getMemberMembership());
+			System.out.println("  |아이디 : " + list.get(i).getMemberId());
+			System.out.println("  |비밀번호 : " + list.get(i).getMemberPw());
+			System.out.println("  |이름 : " + list.get(i).getMemberName());
+			System.out.println("  |전화번호 : " + list.get(i).getMemberTel());
+			System.out.println("  |등록일자 : " + list.get(i).getMemberRedate());
+			System.out.println("  |클래스 정보 : " + list.get(i).getMemberClass());
+			System.out.println("  |수업시작일 : " + list.get(i).getMemberStdate());
+			System.out.println("  |수업종료일 : " + list.get(i).getMemberEndate());
+			System.out.println("  |개인레슨 선생님 : " + list.get(i).getMemberTeacher());
 			System.out.println("  |개인레슨 남은 횟수 : " + list.get(i).getMemberNumber());
+			System.out.println("-------------------------------------------------------");
 	}
 	
 	}
@@ -165,10 +166,10 @@ public class ManagerService {
 	}
 	
 	private void updateMemberInfo() {
-		System.out.println("\n ☆☆☆☆☆☆☆회원정보 수정 페이지☆☆☆☆☆☆☆ \n");
+		System.out.println("\n ☆☆☆☆☆☆☆☆☆☆☆☆☆☆ 회원정보 수정 페이지 ☆☆☆☆☆☆☆☆☆☆☆☆☆☆ \n");
 		upmem =true;
 		while(upmem) {
-			System.out.println("1. 비밀번호 수정   2. 시작일 수정   3. 남은 연장일수 수정   4. 남은 개인레슨 횟수 수정   5. 뒤로가기");
+			System.out.println("1. 비밀번호 수정   2. 시작일 수정   3. 종료일 수정   4. 남은 연장일수 수정   5. 남은 개인레슨 횟수 수정   6. 뒤로가기");
 			System.out.println("메뉴입력 > ");
 			String menu6 = sc.nextLine();
 			
@@ -182,14 +183,18 @@ public class ManagerService {
 				stdateUpdate();
 				break;
 			case "3":
+				//수업 시작일 수정
+				endateUpdate();
+				break;
+			case "4":
 				//남은 연장 일수 수정( 연장은 달 기준으로 숫자만 입력하는 형식)
 				exdateUpdate();
 				break;
-			case "4":
+			case "5":
 				//남은 개인레슨 횟수 수정
 				numberUpdate();
 				break;
-			case "5":
+			case "6":
 				//뒤로가기
 				upmem= false;
 				break;
@@ -236,7 +241,7 @@ public class ManagerService {
 	private void stdateUpdate() {
 		Member member = new Member();
 		boolean mc = true;
-		System.out.println("☆☆☆☆☆☆회원 수업시작일 수정☆☆☆☆☆☆");
+		System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆ 회원 수업시작일 수정 ☆☆☆☆☆☆☆☆☆☆☆☆☆\n");
 		
 		System.out.println("회원 아이디 입력 >");
 		member.setMemberId(sc.nextLine());
@@ -266,15 +271,50 @@ public class ManagerService {
 			System.out.println("없는 회원 아이디 입니다 \n");
 		}
 		
-		 
 		}
+	
+	
+	//수업 만료일 수정
+	private void endateUpdate() {
+		Member member = new Member();
+		boolean eu = true;
+		System.out.println("수업 종료일 수정 \n");
+		System.out.println("수정할 회원 아이디 입력>");
+		member.setMemberId(sc.nextLine());
+		Member mem =  MemberDAO.getinstance().memberlogin(member.getMemberId());
+		if(mem !=null) {
+			while(eu) {
+				System.out.println("바꿀 수업종료일 입력[※※ 작성 형식:  YYYY-MM-DD  ※※] > ");
+				 String date =String.valueOf(sc.nextLine());
+
+					if( date!=null && date.matches("\\d{4}-\\d{2}-\\d{2}")) {
+						member.setMemberEndate(Date.valueOf(date));
+						
+						int result = ManagerDAO.getInstance().endateUpdate(member);
+						
+						if(result >0) {
+							System.out.println("☆☆☆☆회원 수업종료일 수정 완료☆☆☆☆ \n");
+							eu = false;
+						}else {
+							System.out.println("회원 수업종료일 수정 실패...? \n");
+							eu =false;
+						}}
+					else {
+							System.out.println(" 잘못된 형식의 데이터를 입력했습니다 \n");
+							}
+			}
+		}else {
+			System.out.println("없는 회원 아이디 입니다");
+		}
+	}
+	
 	
 	//남은 연장 기간 수정( 달기준으로 1 , 2 등)
 	private void exdateUpdate() {
 		Member member = new Member();
 		boolean exda = true;
 		
-		System.out.println("☆☆☆☆☆☆회원 연장가능한 기간 수정☆☆☆☆☆☆ \n");
+		System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆ 회원 연장가능한 기간 수정 ☆☆☆☆☆☆☆☆☆☆☆☆☆ \n");
 		System.out.println("회원 아이디 입력");
 		System.out.println(" > ");
 		member.setMemberId(sc.nextLine());
@@ -310,7 +350,7 @@ public class ManagerService {
 		Member member = new Member();
 		boolean num=true;
 		
-		System.out.println("☆☆☆☆☆☆회원 개인레슨 횟수 수정☆☆☆☆☆☆ \n");
+		System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆ 회원 개인레슨 횟수 수정 ☆☆☆☆☆☆☆☆☆☆☆☆☆ \n");
 		System.out.println("회원 아이디 입력 >");
 		member.setMemberId(sc.nextLine());
 		Member memch =  MemberDAO.getinstance().memberlogin(member.getMemberId());
@@ -409,12 +449,28 @@ public class ManagerService {
 				String memclass = sc.nextLine();
 				
 				if(memclass.equals("개인") || memclass.equals("2회")|| memclass.equals("3회")) {
-					
+					Boolean num = true;
 				memck.setMemberClass(memclass);
 				if(memck.getMemberClass().equals("개인")) {
-					Boolean num = true;
-					System.out.println("개인레슨 선생님 입력 >");
-					memck.setMemberTeacher(sc.nextLine());
+					
+					List<Manager> list = ManagerDAO.getInstance().getmanagerList();
+					
+					for(int i=0; i<list.size(); i++) {
+						System.out.print("선생님 아이디 : " + list.get(i).getManagerId());
+						System.out.println(",  선생님이름 : " +list.get(i).getManagerName());
+					}
+					while(true){
+					System.out.println("개인레슨 선생님 아이디 입력 >");
+					String teach = sc.nextLine();
+					Manager mana = ManagerDAO.getInstance().managerLogin(teach);
+					if(mana !=null) {
+					memck.setMemberTeacher(teach);
+					break;
+					}else {
+						System.out.println("없는 선생님입니다");
+					}
+					}
+				
 					while(num) {
 					System.out.println("개인레슨 등록 횟수 입력[※※ 작성형식: 숫자로만 입력 ※※] > ");
 					String str2 = String.valueOf(sc.nextLine());
@@ -432,7 +488,7 @@ public class ManagerService {
 						csck = false;
 						}
 					}else{
-						System.out.println("작성형식이 잘못되었습니다.");
+						System.out.println("작성형식이 잘못되었습니다.\n");
 					}
 					}}else if(memck.getMemberClass().equals("2회") ||memck.getMemberClass().equals("3회")){
 					
@@ -494,7 +550,7 @@ public class ManagerService {
 	
 
 	private void LockerMana() {
-		System.out.println(" ☆☆☆☆☆☆ 락커 관리 ☆☆☆☆☆☆ \n");
+		System.out.println(" ☆☆☆☆☆☆☆☆☆☆☆☆☆ 락커 관리 ☆☆☆☆☆☆☆☆☆☆☆☆☆ \n");
 		boolean locma = true;
 		while(locma) {
 		System.out.println("1. 락커대여현황   2. 락커 신청자 현황   3.락커대여 신청 허가관리   4. 락커 철회   5. 뒤로가기");
@@ -529,7 +585,7 @@ public class ManagerService {
 
 	private void lockerPermissionList() {
 		List<Member> list = ManagerDAO.getInstance().lockerPermissionList();
-		System.out.println("☆☆☆☆☆☆ 락커 신청 및 대여중 현황 ☆☆☆☆☆☆ \n");
+		System.out.println("☆☆☆☆☆☆☆☆☆☆☆☆☆ 락커 신청 및 대여중 현황 ☆☆☆☆☆☆☆☆☆☆☆☆☆ \n");
 		
 		for(int i=0; i<list.size(); i++) {
 			System.out.println("락커 번호 : " + list.get(i).getLockerNumber());
@@ -544,7 +600,7 @@ public class ManagerService {
 	// 락커 대여 신청자 확인
 	private void lockerAppList() {
 		List<Member> list = ManagerDAO.getInstance().lockerAppList();
-		System.out.println(" ☆☆☆☆☆☆ 락커 대여 신청자 현황 ☆☆☆☆☆☆ \n");
+		System.out.println(" ☆☆☆☆☆☆☆☆☆☆☆☆☆ 락커 대여 신청자 현황 ☆☆☆☆☆☆☆☆☆☆☆☆☆ \n");
 		
 		for(int i=0; i<list.size(); i++) {
 			System.out.println("회원 아이디 : " +list.get(i).getMemberId());
@@ -570,7 +626,8 @@ public class ManagerService {
 			
 			if(mem2 != null) {
 				while(locad2) {
-					System.out.println("해당 회원에게 부여할 락커 번호 입력 >");
+					System.out.println("해당 회원에게 부여할 락커 번호 [락커는 1~50번 까지 있으며, 숫자만 입력 가능]");
+					System.out.println("락커 번호 입력> ");
 					String text = String.valueOf(sc.nextLine());
 					if(text !=null && text.matches("(\\b[1-9]|[1-4][0-9]|50\\b)")) {
 						int text2 = Integer.parseInt(text);
@@ -681,7 +738,7 @@ public class ManagerService {
 	//수업 만료일 연장한 회원 조회 메뉴
 	private void exStatuseSelect() {
 		List<Member> list = ManagerDAO.getInstance().exStatuseSelect();
-		System.out.println("=============================================");
+		System.out.println("==========================================");
 		for(int i =0; i<list.size(); i++) {
 			System.out.println("회원 아이디 : " + list.get(i).getMemberId());
 			System.out.println("회원 이름 : " + list.get(i).getMemberName());

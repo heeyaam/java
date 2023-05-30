@@ -127,6 +127,28 @@ public class ManagerDAO extends DAO{
 		return result;
 	}
 	
+	//수업 만료일 수정
+	public int endateUpdate(Member member) {
+		int result = 0;
+		try {
+			conn();
+			String sql = "update member set member_endate = ? where member_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setDate(1, member.getMemberEndate());
+			pstmt.setString(2, member.getMemberId());
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		
+		return result;
+	}
+	
+	
+	
 	//남은 연장 기간 수정( 달기준으로 1,2)
 	
 	public int exdateUpdate(Member member) {
@@ -218,6 +240,72 @@ public class ManagerDAO extends DAO{
 		}
 		return result;
 	}
+	
+	//3. 회우너강비 승인관리에 선생님 
+	//모든 선생님 조회
+	public List<Manager> getmanagerList() {
+		List<Manager> list = new ArrayList<Manager>();
+		Manager manager = null;
+		try {
+			conn();
+			String sql = "select * from manager";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				manager = new Manager();
+				manager.setManagerId(rs.getString("manager_id"));
+				manager.setManagerName(rs.getString("manager_name"));
+				manager.setManagerPw(rs.getString("manager_pw"));
+				list.add(manager);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			disconn();
+		}
+		return list;
+	}
+	
+	
+//	public List<Member> getMemberList(){
+//		List<Member> list = new ArrayList<Member>(); 
+//		Member member = null;
+//		try {
+//			conn();
+//			String sql = "select * from member";
+//			pstmt = conn.prepareStatement(sql);
+//			rs = pstmt.executeQuery();
+//			
+//			while(rs.next()) {
+//				member = new Member();
+//				member.setMemberId(rs.getString("member_id"));
+//				member.setMemberPw(rs.getString("member_pw"));
+//				member.setMemberName(rs.getString("member_name"));
+//				member.setMemberTel(rs.getString("member_tel"));
+//				member.setMemberRedate(rs.getDate("member_redate"));
+//				member.setMemberStdate(rs.getDate("member_stdate"));
+//				member.setMemberEndate(rs.getDate("member_endate"));
+//				member.setMemberClass(rs.getString("member_class"));
+//				member.setMemberTeacher(rs.getString("member_teacher"));
+//				member.setMemberExdate(rs.getInt("member_exdate"));
+//				member.setMemberExtatus(rs.getInt("member_exstatus"));
+//				member.setMemberNumber(rs.getInt("member_number"));
+//				member.setMemberExappDate(rs.getDate("member_exappdate"));
+//				member.setMemberMembership(rs.getString("member_membership"));
+//				list.add(member);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}finally {
+//			disconn();
+//		}
+//		return list;
+//	}
+	
+	
+	
 	
 	//3. 회원가입 승인페이지 에 주2회 3회 회원 등록 과정
 	public int weekAdmin(Member member) {

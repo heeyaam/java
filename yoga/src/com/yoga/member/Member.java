@@ -17,6 +17,9 @@ public class Member {
 //			member_teacher VARCHAR2(10),  -> 개인레슨일 경우 담당 선생님
 //			member_exdate Number,			  -> 연장가능한 기간
 //			member_exstatus Number);		  -> 연장 했을 시 연장한 기간
+//			member_membernumber				-> 개인레슨 횟수
+//			member_exappdate				-> 연장신청한 날짜
+//			member_membership				-> 회원신청 허가 여부 (Y/N)
 	
 
 	//member table

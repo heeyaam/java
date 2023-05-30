@@ -25,7 +25,7 @@ public class Application {
 		
 		while(run) {
 			System.out.println();
-			System.out.println("1. 로그인    2. 회원가입    3. 프로그램 종료");
+			System.out.println("1. 로그인    2. 회원가입신청    3. 프로그램 종료");
 			System.out.println("메뉴입력 > ");
 			String menu = sc.nextLine();
 			
@@ -60,11 +60,13 @@ public class Application {
 		case "1":
 			//회원으로 로그인시 메뉴
 			System.out.println();
+			System.out.println("회원 로그인 페이지");
 			memser.memberlogin();
 			break;
 		case "2":
 			//관리자로 로그인시 메뉴
 			System.out.println();
+			System.out.println("관리자 로그인 페이지");
 			manaser.managerLogin();
 			break;
 		default:
